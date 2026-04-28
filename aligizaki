@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+<div id="map" style="height: 100vh;"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+var map = L.map('map').setView([35.4886, 23.5880], 17);
+
+// basemap
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19
+}).addTo(map);
+
+// το GeoJSON σου (διορθωμένο)
+var data = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [23.58793216 , 35.48869786],
+          [23.58805859 , 35.48887906],
+          [23.58818207 , 35.48886744],
+          [23.58830941 , 35.48885587],
+          [23.58831401 , 35.48881901],
+          [23.58831662 , 35.48875541],
+          [23.58830031 , 35.48867233],
+          [23.58820764 , 35.48855600],
+          [23.58821300 , 35.48853106],
+          [23.58821966 , 35.48851500],
+          [23.58824524 , 35.48846452],
+          [23.58827961 , 35.48839310],
+          [23.58829823 , 35.48833970],
+          [23.58806082 , 35.48828049],
+          [23.58804579 , 35.48832066],
+          [23.58802871 , 35.48837755],
+          [23.58800469 , 35.48846397],
+          [23.58797217 , 35.48852585],
+          [23.58795743 , 35.48852590],
+          [23.58795393 , 35.48854969],
+          [23.58794143 , 35.48861066],
+          [23.58793467 , 35.48865321],
+          [23.58793216 , 35.48869786]
+        ]]
+      },
+      "properties": {
+        "name": "Converted Polygon",
+        "description": "Aligizaki Eirini<br><br><b>Location:</b> Xerokampia<br><b>Plot's size:</b> 1433.2 sqm<br><b>Purchase Price:</b> €97,457",
+        "stroke": "#ffff00",
+        "stroke-width": 3,
+        "stroke-opacity": 1,
+        "fill": "#0000ff",
+        "fill-opacity": 0.4
+      }
+    }
+  ]
+};
+
+// style από properties
+function style(feature) {
+  return {
+    color: feature.properties.stroke,
+    weight: feature.properties["stroke-width"],
+    opacity: feature.properties["stroke-opacity"],
+    fillColor: feature.properties.fill,
+    fillOpacity: feature.properties["fill-opacity"]
+  };
+}
+
+// popup
+function onEachFeature(feature, layer) {
+  if (feature.properties && feature.properties.description) {
+    layer.bindPopup(feature.properties.description);
+  }
+}
+
+// add to map
+L.geoJSON(data, {
+  style: style,
+  onEachFeature: onEachFeature
+}).addTo(map);
+
+</script>
+
+</body>
+</html>
