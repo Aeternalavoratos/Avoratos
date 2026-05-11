@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8" />
   <title>Map</title>
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
@@ -15,45 +14,42 @@
 <script>
 var map = L.map('map');
 
-// Basemap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// GEOJSON DATA (2 ακίνητα σωστά μέσα)
 var data = {
   "type": "FeatureCollection",
   "features": [
 
-    // 🟡 ΑΚΙΝΗΤΟ 1
     {
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [23.58793216 , 35.48869786],
-          [23.58805859 , 35.48887906],
-          [23.58818207 , 35.48886744],
-          [23.58830941 , 35.48885587],
-          [23.58831401 , 35.48881901],
-          [23.58831662 , 35.48875541],
-          [23.58830031 , 35.48867233],
-          [23.58820764 , 35.48855600],
-          [23.58821300 , 35.48853106],
-          [23.58821966 , 35.48851500],
-          [23.58824524 , 35.48846452],
-          [23.58827961 , 35.48839310],
-          [23.58829823 , 35.48833970],
-          [23.58806082 , 35.48828049],
-          [23.58804579 , 35.48832066],
-          [23.58802871 , 35.48837755],
-          [23.58800469 , 35.48846397],
-          [23.58797217 , 35.48852585],
-          [23.58795743 , 35.48852590],
-          [23.58795393 , 35.48854969],
-          [23.58794143 , 35.48861066],
-          [23.58793467 , 35.48865321],
-          [23.58793216 , 35.48869786]
+          [23.58793216,35.48869786],
+          [23.58805859,35.48887906],
+          [23.58818207,35.48886744],
+          [23.58830941,35.48885587],
+          [23.58831401,35.48881901],
+          [23.58831662,35.48875541],
+          [23.58830031,35.48867233],
+          [23.58820764,35.48855600],
+          [23.58821300,35.48853106],
+          [23.58821966,35.48851500],
+          [23.58824524,35.48846452],
+          [23.58827961,35.48839310],
+          [23.58829823,35.48833970],
+          [23.58806082,35.48828049],
+          [23.58804579,35.48832066],
+          [23.58802871,35.48837755],
+          [23.58800469,35.48846397],
+          [23.58797217,35.48852585],
+          [23.58795743,35.48852590],
+          [23.58795393,35.48854969],
+          [23.58794143,35.48861066],
+          [23.58793467,35.48865321],
+          [23.58793216,35.48869786]
         ]]
       },
       "properties": {
@@ -67,7 +63,6 @@ var data = {
       }
     },
 
-    // 🔵 ΑΚΙΝΗΤΟ 2
     {
       "type": "Feature",
       "geometry": {
@@ -104,44 +99,45 @@ var data = {
           [23.590987,35.487917]
         ]]
       },
-
-      {
-  "type": "Feature",
-  "properties": {
-    "name": "tsalapakisY",
-    "description": "Owner: Tsalapakis<br>Plot size: ... sq.m.<br>Price: ... €",
-    "stroke": "#ffff00",
-    "stroke-width": 3,
-    "stroke-opacity": 1,
-    "fill": "#0000ff",
-    "fill-opacity": 0.4
-  },
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [[
-      [23.5881783493733, 35.4905093502667],
-      [23.5882186001209, 35.490509487622],
-      [23.5882483086089, 35.4905101299897],
-      ...
-      [23.5881783493733, 35.4905093502667]
-    ]]
-  }
-},
       "properties": {
         "name": "Georgaki Eirini",
-        "description": "<b>Owner:</b> Georgaki Eirini<br><b>Plot size:</b> 1440.72 sq.m.<br><b>Price:</b> €50,000<br><b>Remarks:</b> Non-Buildable",
+        "description": "<b>Owner:</b> Georgaki Eirini<br><b>Plot size:</b> 1440.72 sq.m.<br><b>Price:</b> €50,000",
         "stroke": "#ffff00",
         "stroke-width": 3,
         "stroke-opacity": 1,
         "fill": "#0000ff",
         "fill-opacity": 0.4
       }
+    },
+
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "tsalapakisY",
+        "description": "<b>Owner:</b> Tsalapakis",
+        "stroke": "#ffff00",
+        "stroke-width": 3,
+        "stroke-opacity": 1,
+        "fill": "#0000ff",
+        "fill-opacity": 0.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [23.5881783493733,35.4905093502667],
+          [23.5882186001209,35.490509487622],
+          [23.5882483086089,35.4905101299897],
+          [23.5883242978085,35.49051534838],
+          [23.5883546075937,35.4905169845994],
+          [23.588401083527,35.4905243564135],
+          [23.5881783493733,35.4905093502667]
+        ]]
+      }
     }
 
   ]
 };
 
-// style
 function style(feature) {
   return {
     color: feature.properties.stroke,
@@ -152,20 +148,13 @@ function style(feature) {
   };
 }
 
-// popup
 function onEachFeature(feature, layer) {
-  if (feature.properties && feature.properties.description) {
+  if (feature.properties.description) {
     layer.bindPopup(feature.properties.description);
   }
 }
 
-// add to map
-L.geoJSON(data, {
-  style: style,
-  onEachFeature: onEachFeature
-}).addTo(map);
-
-  var layer = L.geoJSON(data, {
+var layer = L.geoJSON(data, {
   style: style,
   onEachFeature: onEachFeature
 }).addTo(map);
@@ -173,6 +162,5 @@ L.geoJSON(data, {
 map.fitBounds(layer.getBounds());
 
 </script>
-
 </body>
 </html>
