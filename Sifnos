@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Sifnos Properties</title>
 
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+
+<div id="map" style="height: 100vh;"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+var map = L.map('map');
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19
+}).addTo(map);
+
+
+var data = {
+  "type": "FeatureCollection",
+  "features": [
+{
+  "type": "Feature",
+  "properties": {
+    "name": "Athimariti Eirini",
+    "description": "<b>Name:</b> Athimariti Eirini<br><b>Plot size:</b> 2106 sqm<br><b>Price:</b> 90.000 €",
+    "stroke": "#ffff00",
+    "stroke-width": 3,
+    "stroke-opacity": 1,
+    "fill": "#0000ff",
+    "fill-opacity": 0.4
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [24.747435883254, 36.950302569917],
+        [24.747471079955, 36.950467850071],
+        ...
+        [24.747435883254, 36.950302569917]
+      ]
+    ]
+  }
+}
+ 
+
+  ]
+};
+
+
+L.geoJSON(data, {
+  style: function (f) {
+    return {
+      color: f.properties.stroke,
+      weight: f.properties["stroke-width"],
+      opacity: f.properties["stroke-opacity"],
+      fillColor: f.properties.fill,
+      fillOpacity: f.properties["fill-opacity"]
+    };
+  },
+
+  onEachFeature: function (f, layer) {
+    if (f.properties.description) {
+      layer.bindPopup(f.properties.description);
+    }
+  }
+
+}).addTo(map);
+
+
+map.fitBounds(L.geoJSON(data).getBounds());
+
+</script>
+
+</body>
+</html>
