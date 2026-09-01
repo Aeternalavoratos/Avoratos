@@ -95,3 +95,26 @@ var data = {
 
   ]
 };
+  L.geoJSON(data, {
+  style: function(feature) {
+    return {
+      color: feature.properties.stroke,
+      weight: feature.properties["stroke-width"],
+      opacity: feature.properties["stroke-opacity"],
+      fillColor: feature.properties.fill,
+      fillOpacity: feature.properties["fill-opacity"]
+    };
+  },
+  onEachFeature: function(feature, layer) {
+    if (feature.properties && feature.properties.description) {
+      layer.bindPopup(feature.properties.description);
+    }
+  }
+}).addTo(map);
+
+map.fitBounds(L.geoJSON(data).getBounds());
+
+</script>
+
+</body>
+</html>
