@@ -92,7 +92,8 @@ var data = {
 
   ]
 };
-  L.geoJSON(data, {
+  ```javascript
+L.geoJSON(data, {
   style: function(feature) {
     return {
       color: feature.properties.stroke,
@@ -102,12 +103,25 @@ var data = {
       fillOpacity: feature.properties["fill-opacity"]
     };
   },
+
   onEachFeature: function(feature, layer) {
     if (feature.properties && feature.properties.description) {
       layer.bindPopup(feature.properties.description);
     }
+
+    layer.on('click', function(e) {
+      L.DomEvent.stopPropagation(e);
+
+      if (feature.properties && feature.properties.description) {
+        layer.openPopup();
+      }
+    });
   }
 }).addTo(map);
+
+map.fitBounds(L.geoJSON(data).getBounds());
+```
+
 
 map.fitBounds(L.geoJSON(data).getBounds());
 
