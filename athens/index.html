@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Athens Properties</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+var map = L.map('map');
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+var data = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Τελικό Οικόπεδο",
+        "description": "<b>Τελικό Οικόπεδο</b>",
+        "stroke": "#ffff00",
+        "stroke-width": 3,
+        "stroke-opacity": 1,
+        "fill": "#0000ff",
+        "fill-opacity": 0.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [23.773158322219,37.832002604582],
+          [23.773093110002,37.832256918678],
+          [23.773204433914,37.832233789166],
+          [23.773599916840,37.832153702530],
+          [23.773868844061,37.832097977418],
+          [23.774256596212,37.832018504648],
+          [23.774303447538,37.831784163787],
+          [23.773824870242,37.831873106360],
+          [23.773374142317,37.831959126250],
+          [23.773158322219,37.832002604582]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ρυμοτομούμενο Τμήμα",
+        "description": "<b>Ρυμοτομούμενο τμήμα</b>",
+        "stroke": "#ff0000",
+        "stroke-width": 3,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.45
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [23.773120798337,37.832010103311],
+          [23.773056836012,37.832264419793],
+          [23.773093110002,37.832256918678],
+          [23.773158322219,37.832002604582],
+          [23.773120798337,37.832010103311]
+        ]]
+      }
+    }
+
+  ]
+};
+  L.geoJSON(data, {
+  style: function(feature) {
+    return {
+      color: feature.properties.stroke,
+      weight: feature.properties["stroke-width"],
+      opacity: feature.properties["stroke-opacity"],
+      fillColor: feature.properties.fill,
+      fillOpacity: feature.properties["fill-opacity"]
+    };
+  },
+  onEachFeature: function(feature, layer) {
+    if (feature.properties && feature.properties.description) {
+      layer.bindPopup(feature.properties.description);
+    }
+  }
+}).addTo(map);
+
+map.fitBounds(L.geoJSON(data).getBounds());
+
+</script>
+
+</body>
+</html>
