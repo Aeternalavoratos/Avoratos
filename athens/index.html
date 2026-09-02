@@ -45,8 +45,9 @@ var data = {
   "features": [
     {
       "type": "Feature",
-      "properties": {
-        "name": "Karageorgis",
+     "properties": {
+  "id": "karageorgis",
+  "name": "Karageorgis",
          "description": "<b>Name:</b> Karageorgis<br><b>Plot size:</b> 2.713 sqm<br><b>Price:</b> 6.200.000€",
         "Plot Size": "2.713 sqm.",
         "Puchased Price": "6.200.000 €",
@@ -98,7 +99,8 @@ var data = {
     {
   "type": "Feature",
   "properties": {
-    "name": "Zeugolis",
+  "id": "zeugolis",
+  "name": "Zeugolis",
     "description": "<b>Seller:</b> Zeugolis<br><b>Plot Size:</b> 816 sqm.<br><b>Building Size:</b> 495.35 sqm.<br><b>Purchase Price:</b> 1.700.000 €",
     "Seller": "Zeugolis",
     "Plot Size": "816 sqm.",
@@ -124,7 +126,9 @@ var data = {
 
   ]
 };
-  L.geoJSON(data, {
+const plots = {};
+
+const geoLayer = L.geoJSON(data, {
   style: function(feature) {
     return {
       color: feature.properties.stroke,
@@ -134,14 +138,33 @@ var data = {
       fillOpacity: feature.properties["fill-opacity"]
     };
   },
+
   onEachFeature: function(feature, layer) {
+
     if (feature.properties && feature.properties.description) {
       layer.bindPopup(feature.properties.description);
     }
+
+    if (feature.properties && feature.properties.id) {
+      plots[feature.properties.id] = layer;
+    }
   }
 }).addTo(map);
+const params = new URLSearchParams(window.location.search);
+const plotId = params.get("plot");
 
-map.fitBounds(L.geoJSON(data).getBounds());
+if (plotId && plots[plotId]) {
+  map.fitBounds(plots[plotId].getBounds(), {
+    padding: [40, 40]
+  });
+
+  setTimeout(function() {
+    plots[plotId].openPopup();
+  }, 400);
+
+} else {
+  map.fitBounds(geoLayer.getBounds());
+}
 
 </script>
 
