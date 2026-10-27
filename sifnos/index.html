@@ -704,28 +704,79 @@ var data = {
 };
 
 
-L.geoJSON(data, {
 
-  style: function (f) {
-    return {
-      color: f.properties.stroke,
-      weight: f.properties["stroke-width"],
-      opacity: f.properties["stroke-opacity"],
-      fillColor: f.properties.fill,
-      fillOpacity: f.properties["fill-opacity"]
-    };
-  },
+function flattenFeatures(item) {
+  var result = [];
 
-  onEachFeature: function (f, layer) {
-    if (f.properties.description) {
-      layer.bindPopup(f.properties.description);
+  function visit(obj) {
+    if (!obj) return;
+
+    if (obj.type === "FeatureCollection" &&
+        Array.isArray(obj.features)) {
+      obj.features.forEach(visit);
+    } else if (obj.type === "Feature") {
+      result.push(obj);
     }
   }
 
+  visit(item);
+  return result;
+}
+
+var flatData = {
+  type: "FeatureCollection",
+  features: flattenFeatures(data)
+};
+
+var geoJsonLayer = L.geoJSON(flatData, {
+  style: function (feature) {
+    var p = feature.properties || {};
+
+    return {
+      color: p.stroke || "#ffff00",
+      weight: p["stroke-width"] || 3,
+      opacity: p["stroke-opacity"] ?? 1,
+      fillColor: p.fill || "#0000ff",
+      fillOpacity: p["fill-opacity"] ?? 0.4
+    };
+  },
+
+  onEachFeature: function (feature, layer) {
+    var p = feature.properties || {};
+
+    if (p.description) {
+      layer.bindPopup(p.description);
+    }
+  }
 }).addTo(map);
 
+// Αν υπάρχει ?plot=..., εστίασε στο αντίστοιχο ακίνητο.
+var plotId = new URLSearchParams(window.location.search)
+  .get("plot");
 
-map.fitBounds(L.geoJSON(data).getBounds());
+var matchingLayer = null;
+
+geoJsonLayer.eachLayer(function (layer) {
+  var feature = layer.feature;
+  var p = feature.properties || {};
+  var id = feature.id || p.id;
+
+  if (plotId && String(id) === plotId) {
+    matchingLayer = layer;
+  }
+});
+
+if (matchingLayer &&
+    matchingLayer.getBounds) {
+  map.fitBounds(matchingLayer.getBounds(), {
+    padding: [30, 30],
+    maxZoom: 19
+  });
+  matchingLayer.openPopup();
+} else {
+  map.fitBounds(geoJsonLayer.getBounds());
+}
+
 
 </script>
 
